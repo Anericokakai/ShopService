@@ -10,10 +10,11 @@ import lombok.*;
 
 public class ShopResponse {
 
-private  int shopId;
+
     private String shopName;
 
     private  String shopLocation;
 
     private String shopContact;
+    private int shopId;
 }

@@ -8,14 +8,12 @@ import lombok.*;
 @Data
 public class ShopRequest {
 
-
-
-
-
     private String shopName;
 
     private  String shopLocation;
 
     private String shopContact;
+
+    private int shopId;
 }
 

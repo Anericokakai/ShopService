@@ -25,4 +25,6 @@ public class Shops {
     private  String shopLocation;
     @Column(name = "shop_contact")
     private String shopContact;
+    @Column(name = "shopid")
+    private int shopId;
 }
