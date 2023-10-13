@@ -56,7 +56,7 @@ public class ShopsController {
                return ResponseEntity.status(HttpStatus.NOT_FOUND.value()).body(
                        error);
            }
-           return  ResponseEntity.status(HttpStatus.FOUND).body(
+           return  ResponseEntity.status(200).body(
                    result
            );
     }catch (EntityNotFoundException ex){
