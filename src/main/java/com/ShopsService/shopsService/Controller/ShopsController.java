@@ -52,4 +52,15 @@ public class ShopsController {
      var Res=   shopService.updateShop(shopRequest,storeNumber);
         return  ResponseEntity.status(HttpStatus.CREATED.value()).body(Res);
     }
+
+
+    @DeleteMapping("/delete/{storeNumber}")
+    public  ResponseEntity<?> deleteShop(@PathVariable("storeNumber") String storeNumber) throws EntityNotFoundException{
+
+   var respose=  shopService.deleteShop(storeNumber);
+
+   return  ResponseEntity.status(HttpStatus.CREATED).body(respose);
+    }
 }
+
+

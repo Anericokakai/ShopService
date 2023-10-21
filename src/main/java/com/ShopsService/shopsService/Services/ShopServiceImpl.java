@@ -1,21 +1,23 @@
 package com.ShopsService.shopsService.Services;
 
-import com.ShopsService.shopsService.Exceptions.NotFoundException;
+import com.ShopsService.shopsService.EurekaClient.ProductsClient;
 import com.ShopsService.shopsService.Models.Shops;
 import com.ShopsService.shopsService.Repository.ShopRepository;
+import com.ShopsService.shopsService.Tdo.ProductResponse;
 import com.ShopsService.shopsService.Tdo.ShopRequest;
 import com.ShopsService.shopsService.Tdo.ShopResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -25,7 +27,7 @@ public class ShopServiceImpl implements ShopsService{
 
 
     private final ModelMapper modelMapper;
-
+private  final ProductsClient productsClient;
 
 
 //    ! generate a unique store number of each shop
@@ -76,5 +78,20 @@ if(!shopRequest.getShopName().isEmpty()){
 
         return modelMapper.map(savedShop,ShopResponse.class);
 
+    }
+
+    @Override
+    public Map<String,String > deleteShop(String storeNumber) {
+
+        if(shopRepository.deleteByStoreNumber(storeNumber).isEmpty()){
+            throw  new EntityNotFoundException("cannot delete shop with the store number :"+storeNumber+"because of invalid store number !");
+        }
+        Shops deleted=shopRepository.deleteByStoreNumber(storeNumber).get();
+
+//        delete all the products related to the shop
+        Map<String,String > response= productsClient.deleteAllProductUnderShop(storeNumber);
+
+       response.put("message","products where deleted successful together with the shop");
+return  response;
     }
 }
