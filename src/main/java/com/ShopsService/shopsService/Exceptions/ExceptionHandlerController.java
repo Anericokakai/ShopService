@@ -1,5 +1,6 @@
 package com.ShopsService.shopsService.Exceptions;
 
+import feign.FeignException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -66,6 +67,22 @@ public Map<String,String> handlBadCredentialsExc(MethodArgumentNotValidException
          return errMap;
     }
 
+//    ! handle feign client 400 respose
+
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ExceptionHandler(FeignException.class )
+    public Map<String,String > feignBadRequst(FeignException ex){
+
+        Map<String ,String > errorMap= new HashMap<>();
+
+        errorMap.put("productsMessage",getMessage(ex.contentUTF8()));
+        errorMap.put("shopMessage","store was deleted successfully ");
+        return errorMap;
+
+    }
+    private  String getMessage(String  res){
+        return  res.substring(res.indexOf("\"errorMessage\":")+16,res.indexOf("\"}"));
+    }
 
 
 

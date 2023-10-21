@@ -88,7 +88,7 @@ if(!shopRequest.getShopName().isEmpty()){
 
 if(shopRepository.findByStoreNumber(storeNumber).isEmpty()){
 System.out.println("there is nothing to delete");
-    throw  new NotFoundException("there is no store with the given id : "+storeNumber+" tht is available");
+    throw  new NotFoundException("there is no store with the given id : "+storeNumber+" that is available");
 
 }
 

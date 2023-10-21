@@ -33,7 +33,6 @@ public class ShopsController {
 
     public ResponseEntity<?> findShopById(@PathVariable("storeNumber") String storeNumber) throws  EntityNotFoundException{
 
-
            var result= shopService.findByStoreNumber(storeNumber);
 
            System.out.println("the server was hit by the product service");
