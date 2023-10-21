@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Map;
 
-@EnableFeignClients
+
 @FeignClient(name = "PRODUCTS-APP",path = "/v2/api/products")
 public interface ProductsClient {
 

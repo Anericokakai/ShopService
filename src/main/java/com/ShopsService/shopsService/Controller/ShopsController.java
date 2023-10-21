@@ -55,11 +55,11 @@ public class ShopsController {
 
 
     @DeleteMapping("/delete/{storeNumber}")
-    public  ResponseEntity<?> deleteShop(@PathVariable("storeNumber") String storeNumber) throws EntityNotFoundException{
+    public  ResponseEntity<?> deleteShop(@PathVariable("storeNumber") String storeNumber) throws NotFoundException{
 
-   var respose=  shopService.deleteShop(storeNumber);
-
-   return  ResponseEntity.status(HttpStatus.CREATED).body(respose);
+   var res=  shopService.deleteShop(storeNumber);
+System.out.println("the end point was hit");
+   return  ResponseEntity.status(HttpStatus.CREATED).body(res);
     }
 }
 

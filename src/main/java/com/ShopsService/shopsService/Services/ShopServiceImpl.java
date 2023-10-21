@@ -1,6 +1,7 @@
 package com.ShopsService.shopsService.Services;
 
 import com.ShopsService.shopsService.EurekaClient.ProductsClient;
+import com.ShopsService.shopsService.Exceptions.NotFoundException;
 import com.ShopsService.shopsService.Models.Shops;
 import com.ShopsService.shopsService.Repository.ShopRepository;
 import com.ShopsService.shopsService.Tdo.ProductResponse;
@@ -83,13 +84,18 @@ if(!shopRequest.getShopName().isEmpty()){
     @Override
     public Map<String,String > deleteShop(String storeNumber) {
 
-        if(shopRepository.deleteByStoreNumber(storeNumber).isEmpty()){
-            throw  new EntityNotFoundException("cannot delete shop with the store number :"+storeNumber+"because of invalid store number !");
-        }
-        Shops deleted=shopRepository.deleteByStoreNumber(storeNumber).get();
 
+
+if(shopRepository.findByStoreNumber(storeNumber).isEmpty()){
+System.out.println("there is nothing to delete");
+    throw  new NotFoundException("there is no store with the given id : "+storeNumber+" tht is available");
+
+}
+
+shopRepository.deleteByStoreNumber(storeNumber);
 //        delete all the products related to the shop
-        Map<String,String > response= productsClient.deleteAllProductUnderShop(storeNumber);
+       Map<String,String > response= productsClient.deleteAllProductUnderShop(storeNumber);
+
 
        response.put("message","products where deleted successful together with the shop");
 return  response;

@@ -56,6 +56,16 @@ public Map<String,String> handlBadCredentialsExc(MethodArgumentNotValidException
         return errorMap;
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NotFoundException.class)
+    public Map<String ,String > notFoundHanlder(NotFoundException ex){
+
+        Map<String ,String > errMap=new HashMap<>();
+
+         errMap.put("errorMessage", ex.getMessage());
+         return errMap;
+    }
+
 
 
 
