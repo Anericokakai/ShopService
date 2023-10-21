@@ -14,5 +14,4 @@ public interface ProductsClient {
 
     @DeleteMapping("/delete/all/{storeNumber}")
     Map<String ,String > deleteAllProductUnderShop(@PathVariable("storeNumber") String  storeNumber);
-
 }

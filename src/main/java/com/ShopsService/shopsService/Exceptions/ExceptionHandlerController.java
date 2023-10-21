@@ -70,18 +70,31 @@ public Map<String,String> handlBadCredentialsExc(MethodArgumentNotValidException
 //    ! handle feign client 400 respose
 
     @ResponseStatus(HttpStatus.ACCEPTED)
-    @ExceptionHandler(FeignException.class )
+    @ExceptionHandler(FeignException.BadRequest.class )
     public Map<String,String > feignBadRequst(FeignException ex){
 
         Map<String ,String > errorMap= new HashMap<>();
 
         errorMap.put("productsMessage",getMessage(ex.contentUTF8()));
-        errorMap.put("shopMessage","store was deleted successfully ");
+        errorMap.put("shopMessage","store was  deleted successfully");
         return errorMap;
 
     }
     private  String getMessage(String  res){
         return  res.substring(res.indexOf("\"errorMessage\":")+16,res.indexOf("\"}"));
+    }
+
+//    Service not available for feign client
+
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    @ExceptionHandler(FeignException.ServiceUnavailable.class)
+    public Map<String ,String > serviceUnavailbale(FeignException ex){
+
+        Map<String ,String > erorMap= new HashMap<>();
+        erorMap.put("errorMessage", ex.contentUTF8());
+
+        return  erorMap;
+
     }
 
 
