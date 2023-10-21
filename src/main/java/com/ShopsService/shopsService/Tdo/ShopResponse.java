@@ -16,5 +16,5 @@ public class ShopResponse {
     private  String shopLocation;
 
     private String shopContact;
-    private int shopId;
+    private String storeNumber;
 }

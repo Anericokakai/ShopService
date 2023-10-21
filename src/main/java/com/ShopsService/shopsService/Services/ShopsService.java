@@ -9,9 +9,11 @@ import java.util.Optional;
 public interface ShopsService {
 
 
-    Optional<Shops> getShopById( int id);
+    Optional<Shops> findByStoreNumber( String storeNumber);
 
 
     ShopResponse createNewShop(ShopRequest shopRequest);
 
+
+    ShopResponse updateShop(ShopRequest shopRequest,String storeNumber);
 }
