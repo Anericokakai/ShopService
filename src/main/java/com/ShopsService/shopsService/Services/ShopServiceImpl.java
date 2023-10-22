@@ -1,23 +1,20 @@
 package com.ShopsService.shopsService.Services;
-
 import com.ShopsService.shopsService.EurekaClient.ProductsClient;
 import com.ShopsService.shopsService.Exceptions.NotFoundException;
 import com.ShopsService.shopsService.Models.Shops;
 import com.ShopsService.shopsService.Repository.ShopRepository;
-import com.ShopsService.shopsService.Tdo.ProductResponse;
 import com.ShopsService.shopsService.Tdo.ShopRequest;
 import com.ShopsService.shopsService.Tdo.ShopResponse;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-@RequiredArgsConstructor
+
+@AllArgsConstructor
 @Service
 public class ShopServiceImpl implements ShopsService{
 
@@ -84,7 +81,7 @@ if(!shopRequest.getShopName().isEmpty()){
 
 
 if(shopRepository.findByStoreNumber(storeNumber).isEmpty()){
-System.out.println("there is nothing to delete");
+
     throw  new NotFoundException("there is no store with the given id : "+storeNumber+" that is available");
 
 }
