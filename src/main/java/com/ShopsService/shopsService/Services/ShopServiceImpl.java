@@ -15,10 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -99,5 +96,15 @@ shopRepository.deleteByStoreNumber(storeNumber);
 
        response.put("message","products where deleted successful together with the shop");
 return  response;
+    }
+
+    @Override
+    public List<Shops> findAll() {
+        List<Shops> shops = shopRepository.findAll();
+
+        if(shops.isEmpty()){
+            throw new NotFoundException("there are no items shops available");
+        }
+        return shops;
     }
 }

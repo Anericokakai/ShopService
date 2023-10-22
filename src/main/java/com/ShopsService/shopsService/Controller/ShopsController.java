@@ -27,6 +27,11 @@ public class ShopsController {
                     .body(newShop);
 
     }
+    @GetMapping("/all")
+    public  ResponseEntity<?> findAllShops(){
+        var res=shopService.findAll();
+        return  ResponseEntity.status(200).body(res);
+    }
 
 
     @GetMapping("/{storeNumber}")
