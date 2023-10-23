@@ -16,6 +16,7 @@ import java.util.HashMap;
 
 @RestController
 @RequiredArgsConstructor
+
 public class ShopsController {
     private  final ShopServiceImpl shopService;
 
@@ -30,7 +31,7 @@ public class ShopsController {
     @GetMapping("/all")
     public  ResponseEntity<?> findAllShops(){
         var res=shopService.findAll();
-        return  ResponseEntity.status(200).body(res);
+        return  ResponseEntity.status(HttpStatus.FOUND).body(res);
     }
 
 
