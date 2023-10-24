@@ -27,7 +27,6 @@ import static org.mockito.Mockito.when;
 
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = TestConfig.class)
 @SpringBootTest(classes = ServiceTest.class )
 
 public class ServiceTest {

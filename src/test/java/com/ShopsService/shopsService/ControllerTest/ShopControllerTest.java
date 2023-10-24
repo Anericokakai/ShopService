@@ -1,31 +1,33 @@
 package com.ShopsService.shopsService.ControllerTest;
 
 import com.ShopsService.shopsService.Controller.ShopsController;
+import com.ShopsService.shopsService.Exceptions.ExceptionHandlerController;
 import com.ShopsService.shopsService.Models.Shops;
 import com.ShopsService.shopsService.Services.ShopServiceImpl;
 import com.ShopsService.shopsService.Tdo.ShopRequest;
 import com.ShopsService.shopsService.Tdo.ShopResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.runner.RunWith;
+import jakarta.persistence.EntityNotFoundException;
+import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -57,11 +59,14 @@ public class ShopControllerTest {
 
         shopsList.add(new Shops(2,"kwa mama jemo","nyeri town naivas","079387219","STORE-78225202328129"));
         shopsList.add (new Shops(1, "kwa mama brayo", "nairobi cbd", "0792626899", "STORE-78225202328113"));
-        mockMvc= MockMvcBuilders.standaloneSetup(shopsController).build();
+        shops= new Shops(2,"kwa mama jemo","nyeri town naivas","079387219","STORE-78225202328129");
+        mockMvc= MockMvcBuilders.standaloneSetup(shopsController)
+                .setControllerAdvice( new ExceptionHandlerController()).build();
     }
 
     @Test
 
+    @Order(1)
     public void assert_that_Will_FindAllShops() throws Exception{
         Mockito.when(shopService.findAll()).thenReturn(shopsList);
 mockMvc.perform(get("/all")
@@ -77,11 +82,12 @@ mockMvc.perform(get("/all")
     }
 
     @Test
+    @Order(2)
    public void asserThatwillCreateNewShop() throws  Exception{
 
         ObjectMapper objectMapper= new ObjectMapper();
 
-        shops= new Shops(2,"kwa mama jemo","nyeri town naivas","079387219","STORE-78225202328129");
+
         ShopRequest shopRequest=new ShopRequest(shops.getShopName(), shops.getShopLocation(), shops.getShopContact(), shops.getStoreNumber());
         ShopResponse shopResponse=new ShopResponse();
         shopResponse.setShopName(shops.getShopName());
@@ -100,7 +106,8 @@ mockMvc.perform(get("/all")
          .andDo(print());
     }
 @Test
-    public  void assertWIllThrowExcptio() throws  Exception{
+@Order(3)
+    public  void assertThatWIllThrowExceptionInvalidINputs() throws  Exception{
 
 
 
@@ -117,10 +124,57 @@ mockMvc.perform(get("/all")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("utf-8")
                 .content(reqBody)).andExpect(status().isBadRequest())
+                .andExpect(result->assertTrue(result.getResolvedException()
+                        instanceof MethodArgumentNotValidException))
+
                 .andDo(print());
 }
 
 
 
+@Test
+@Order(4)
+    public  void  assertThatWillFIndAShopBYStoreNumber()  throws  Exception{
 
+        String  storeNUmber="STORE-78225202328129";
+
+
+        Mockito.when(shopService.findByStoreNumber(storeNUmber)).thenReturn(Optional.of(shops));
+
+        mockMvc.perform(
+                get("/{storeNumber}",storeNUmber)
+                        .characterEncoding("utf-8")
+                        .contentType(MediaType.APPLICATION_JSON)
+
+        ).andExpect(status().isFound())
+                .andExpect(jsonPath("$.storeNumber").value(shops.getStoreNumber()))
+                .andExpect(jsonPath("$.shopName").value(shops.getShopName()));
+
+
+}
+
+@Test
+    @Order(5)
+public  void assertThatWillThrowNOtFoundException() throws Exception{
+        String storeNum="1234";
+
+
+//        Mockito.when(shopService.findByStoreNumber(storeNum)).thenAnswer(result->{
+//            if(storeNum.equals(shops.getStoreNumber())){
+//                return  Optional.of(shops);
+//            }else{
+//                throw new EntityNotFoundException("shop with the given id :"+storeNum+ " was not found");
+//            }
+//        });
+    Mockito.when(shopService.findByStoreNumber(storeNum)).thenThrow( new EntityNotFoundException("shop with the given id :"+storeNum+ " was not found"));
+
+        mockMvc.perform(
+                get("/{storeNumber}",storeNum)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+
+        ).andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof EntityNotFoundException))
+                .andDo(print());
+}
 }

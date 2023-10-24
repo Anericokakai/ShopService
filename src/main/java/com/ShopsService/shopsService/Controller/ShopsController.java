@@ -42,7 +42,7 @@ public class ShopsController {
            var result= shopService.findByStoreNumber(storeNumber);
 
            System.out.println("the server was hit by the product service");
-           return  ResponseEntity.status(200).body(
+           return  ResponseEntity.status(HttpStatus.FOUND).body(
                    result
            );
 
