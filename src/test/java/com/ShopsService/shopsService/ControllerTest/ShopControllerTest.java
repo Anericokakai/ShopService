@@ -28,8 +28,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -50,6 +49,8 @@ public class ShopControllerTest {
     ShopsController shopsController;
    Shops shops;
    List<Shops> shopsList;
+    ShopRequest shopRequest;
+    ShopRequest updateShop;
 
 
     @BeforeEach
@@ -60,6 +61,7 @@ public class ShopControllerTest {
         shopsList.add(new Shops(2,"kwa mama jemo","nyeri town naivas","079387219","STORE-78225202328129"));
         shopsList.add (new Shops(1, "kwa mama brayo", "nairobi cbd", "0792626899", "STORE-78225202328113"));
         shops= new Shops(2,"kwa mama jemo","nyeri town naivas","079387219","STORE-78225202328129");
+         shopRequest=new ShopRequest(shops.getShopName(), shops.getShopLocation(), shops.getShopContact(), shops.getStoreNumber());
         mockMvc= MockMvcBuilders.standaloneSetup(shopsController)
                 .setControllerAdvice( new ExceptionHandlerController()).build();
     }
@@ -87,8 +89,6 @@ mockMvc.perform(get("/all")
 
         ObjectMapper objectMapper= new ObjectMapper();
 
-
-        ShopRequest shopRequest=new ShopRequest(shops.getShopName(), shops.getShopLocation(), shops.getShopContact(), shops.getStoreNumber());
         ShopResponse shopResponse=new ShopResponse();
         shopResponse.setShopName(shops.getShopName());
         shopResponse.setShopLocation(shops.getShopLocation());
@@ -126,7 +126,6 @@ mockMvc.perform(get("/all")
                 .content(reqBody)).andExpect(status().isBadRequest())
                 .andExpect(result->assertTrue(result.getResolvedException()
                         instanceof MethodArgumentNotValidException))
-
                 .andDo(print());
 }
 
@@ -159,14 +158,15 @@ public  void assertThatWillThrowNOtFoundException() throws Exception{
         String storeNum="1234";
 
 
-//        Mockito.when(shopService.findByStoreNumber(storeNum)).thenAnswer(result->{
-//            if(storeNum.equals(shops.getStoreNumber())){
-//                return  Optional.of(shops);
-//            }else{
-//                throw new EntityNotFoundException("shop with the given id :"+storeNum+ " was not found");
-//            }
-//        });
-    Mockito.when(shopService.findByStoreNumber(storeNum)).thenThrow( new EntityNotFoundException("shop with the given id :"+storeNum+ " was not found"));
+        String  errorMessage="shop with the given id :"+storeNum+ " was not found";
+        Mockito.when(shopService.findByStoreNumber(storeNum)).thenAnswer(result->{
+            if(storeNum.equals(shops.getStoreNumber())){
+                return  Optional.of(shops);
+            }else{
+                throw new EntityNotFoundException(errorMessage);
+            }
+        });
+
 
         mockMvc.perform(
                 get("/{storeNumber}",storeNum)
@@ -175,6 +175,44 @@ public  void assertThatWillThrowNOtFoundException() throws Exception{
 
         ).andExpect(status().isBadRequest())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof EntityNotFoundException))
+                .andExpect(jsonPath("$.errorMessage" ).value(errorMessage))
                 .andDo(print());
 }
+
+
+
+    @Test
+    @Order(6)
+    public void assertWillUpdateStore() throws  Exception{
+
+updateShop=new ShopRequest("drips ke","nairobi westGate mall","074378047","STORE-26783902");
+ShopResponse shopRes= ShopResponse.builder()
+        .shopName(updateShop.getShopName())
+        .shopLocation(updateShop.getShopLocation())
+        .shopContact(updateShop.getShopContact())
+        .storeNumber(updateShop.getStoreNumber())
+        .build();
+String  storeNumber="12345";
+        Mockito.when(shopService.updateShop(shopRequest,shopRequest.getStoreNumber())).thenAnswer(response->{
+            if(storeNumber.equals(shops.getStoreNumber())){
+                return shopRes;
+            }else{
+                throw new EntityNotFoundException("shop with the given id :"+storeNumber+ " was not found");
+            }
+
+        });
+
+        ObjectMapper objectMapper= new ObjectMapper();
+
+        String reqBody=objectMapper.writeValueAsString(updateShop);
+        mockMvc.perform(put("/update/{storeNumber}",storeNumber)
+                .characterEncoding("utf-8")
+                .contentType("application/json")
+                .content(reqBody))
+                .andExpect(status().isCreated());
+
+}
+
+
+
 }
