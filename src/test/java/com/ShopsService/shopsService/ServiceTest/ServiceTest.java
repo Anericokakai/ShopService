@@ -35,7 +35,7 @@ public class ServiceTest {
     @InjectMocks
     ShopServiceImpl shopsService;
 
-    @Mock
+    @InjectMocks
     private  ModelMapper modelMapper;
 
     @Mock
@@ -176,10 +176,11 @@ public  void  assert_throw_notFoundExForFindAll_test(){
         ShopRequest newShop=new ShopRequest("kwa kina siko","mombasa","07926262899","");
         ShopResponse updatedShop= new ShopResponse(newShop.getShopName(),newShop.getShopLocation(),newShop.getShopContact(),shops1.getStoreNumber());
 
-        when(modelMapper.map(savedShop,ShopResponse.class)).thenReturn(updatedShop);
+        ShopResponse shopResponse1= modelMapper.map(newShop,ShopResponse.class);
+//     when(modelMapper.map(savedShop,ShopResponse.class)).thenReturn(updatedShop);
         when(shopRepository.findByStoreNumber(shops1.getStoreNumber())).thenReturn(Optional.ofNullable(shops1));
-
-        when(shopsService.updateShop(newShop,shops1.getStoreNumber())).thenReturn(updatedShop);
+shopsService= new ShopServiceImpl(shopRepository,modelMapper,productsClient);
+        when(shopsService.updateShop(newShop,shops1.getStoreNumber())).thenReturn(shopResponse1);
 
         assertEquals(updatedShop,shopsService.updateShop(newShop,shops1.getStoreNumber()));
 
