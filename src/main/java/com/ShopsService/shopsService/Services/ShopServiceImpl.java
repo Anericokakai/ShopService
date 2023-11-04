@@ -6,6 +6,7 @@ import com.ShopsService.shopsService.Repository.ShopRepository;
 import com.ShopsService.shopsService.Tdo.ShopRequest;
 import com.ShopsService.shopsService.Tdo.ShopResponse;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
@@ -15,19 +16,16 @@ import java.util.*;
 
 
 @Service
+@AllArgsConstructor
 public class ShopServiceImpl implements ShopsService{
 
     private  final ShopRepository shopRepository;
 
 
-    private  ModelMapper modelMapper;
+    private  final ModelMapper modelMapper;
 private  final ProductsClient productsClient;
 
-    public ShopServiceImpl(ShopRepository shopRepository, ModelMapper modelMapper, ProductsClient productsClient) {
-        this.shopRepository = shopRepository;
-        this.modelMapper = modelMapper;
-        this.productsClient = productsClient;
-    }
+
 
 
 //    ! generate a unique store number of each shop

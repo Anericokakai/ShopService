@@ -1,0 +1,14 @@
+/home/rico/projects/springProjects/ShopService/src/main/java/com/ShopsService/shopsService/Repository/ShopRepository.java
+/home/rico/projects/springProjects/ShopService/src/main/java/com/ShopsService/shopsService/Services/ShopsService.java
+/home/rico/projects/springProjects/ShopService/src/main/java/com/ShopsService/shopsService/EurekaClient/ProductsClient.java
+/home/rico/projects/springProjects/ShopService/src/main/java/com/ShopsService/shopsService/Tdo/ShopResponse.java
+/home/rico/projects/springProjects/ShopService/src/main/java/com/ShopsService/shopsService/Controller/ShopsController.java
+/home/rico/projects/springProjects/ShopService/src/main/java/com/ShopsService/shopsService/Exceptions/NotFoundException.java
+/home/rico/projects/springProjects/ShopService/src/main/java/com/ShopsService/shopsService/Services/ShopServiceImpl.java
+/home/rico/projects/springProjects/ShopService/src/main/java/com/ShopsService/shopsService/Tdo/ProductResponse.java
+/home/rico/projects/springProjects/ShopService/src/main/java/com/ShopsService/shopsService/Exceptions/ExceptionHandlerController.java
+/home/rico/projects/springProjects/ShopService/src/main/java/com/ShopsService/shopsService/Models/Shops.java
+/home/rico/projects/springProjects/ShopService/src/main/java/com/ShopsService/shopsService/Tdo/ShopRequest.java
+/home/rico/projects/springProjects/ShopService/src/main/java/com/ShopsService/shopsService/Controller/AdminController.java
+/home/rico/projects/springProjects/ShopService/src/main/java/com/ShopsService/shopsService/configs/AppConfigs.java
+/home/rico/projects/springProjects/ShopService/src/main/java/com/ShopsService/shopsService/ShopsServiceApplication.java

@@ -16,18 +16,11 @@ import java.util.HashMap;
 
 @RestController
 @RequiredArgsConstructor
-
+@RequestMapping("/home")
 public class ShopsController {
     private  final ShopServiceImpl shopService;
 
-    @PostMapping("/new")
-    public ResponseEntity<?> createNewShop(@RequestBody @Valid ShopRequest request) throws HttpMessageNotReadableException {
 
-            var newShop=shopService.createNewShop(request);
-            return ResponseEntity.status(HttpStatus.CREATED.value())
-                    .body(newShop);
-
-    }
     @GetMapping("/all")
     public  ResponseEntity<?> findAllShops(){
         var res=shopService.findAll();
@@ -42,12 +35,21 @@ public class ShopsController {
            var result= shopService.findByStoreNumber(storeNumber);
 
            System.out.println("the server was hit by the product service");
-           return  ResponseEntity.status(HttpStatus.FOUND).body(
+           return  ResponseEntity.status(HttpStatus.OK).body(
                    result
            );
 
 
         }
+    @PostMapping("/new")
+
+    public ResponseEntity<?> createNewShop(@RequestBody @Valid ShopRequest request) throws HttpMessageNotReadableException {
+
+        var newShop=shopService.createNewShop(request);
+        return ResponseEntity.status(HttpStatus.CREATED.value())
+                .body(newShop);
+
+    }
 
 //        update the shop details
 
